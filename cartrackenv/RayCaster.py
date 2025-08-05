@@ -7,14 +7,18 @@ class RayCaster():
         self.rays = []
         self.player = player
 
-    def cast_all_rays(self):
+    def cast_all_rays(self, screen):
         self.rays.clear()
 
-        ray_angle = math.radians(115 + self.player.angle - constants.FOV/2)
+        ray_angle = math.radians(118 + self.player.angle - constants.FOV/2)
+        ray_length = 120
         for i in range(constants.NUM_RAYS):
-            ray = Ray(ray_angle, self.player.rect.center)
-            ray.cast()
-            self.rays.append(ray)
+            ray1 = Ray(ray_angle, ray_length, self.player.rect.center)
+            ray2 = Ray(ray_angle, ray_length//2, self.player.rect.center)
+            ray1.draw(screen)
+            ray2.draw(screen)
+            self.rays.append(ray1)
+            self.rays.append(ray2)
 
             ray_angle += constants.FOV/constants.NUM_RAYS
 
