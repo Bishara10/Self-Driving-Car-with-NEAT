@@ -1,4 +1,5 @@
 import pygame, math
+from Car import Car
 
 def normalizeAngle(angle):
     angle = angle % (2 * math.pi)
@@ -28,4 +29,3 @@ class Ray(pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(self.surf, self.rect)
-

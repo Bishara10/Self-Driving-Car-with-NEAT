@@ -1,5 +1,4 @@
 import pygame
-from pygame import SRCALPHA
 
 import constants
 import math
@@ -14,8 +13,9 @@ class Car(pygame.sprite.Sprite):
         self.image = self.original_image.copy()
         self.rect = self.image.get_rect(center=self.position)
         self.mask = pygame.mask.from_surface(self.image)
-        self.speed = constants.CAR_MAX_SPEED
+        self.alive = True
 
+        self.speed = constants.CAR_MAX_SPEED
         self.velocity = self.speed * pygame.math.Vector2(-1, 0)
         self.rot_angle_speed = constants.Car_Rotation_Angle_Speed
         self.angle = 0
@@ -33,21 +33,24 @@ class Car(pygame.sprite.Sprite):
         self.velocity.x = -horizontal
         self.velocity.y = vertical
 
-    def update(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_RIGHT]:
-            self.angle -= self.rot_angle_speed
-        if keys[pygame.K_LEFT]:
+    def action(self, action):
+        if action == 1:
+            #turn left
             self.angle += self.rot_angle_speed
-        # if keys[pygame.K_SPACE]:
-        #     self.speed = 0 if self.speed else constants.CAR_MAX_SPEED
+        elif action == 2:
+            #turn right
+            self.angle -= self.rot_angle_speed
 
+    def update(self):
         self.updateVelocityVector()
         self.rotate()
 
         self.position += self.velocity
         self.rect.center = self.position
 
+    def destroy(self):
+        self.speed = 0
+        self.alive = False
 
 
 
