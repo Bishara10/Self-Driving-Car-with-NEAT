@@ -5,7 +5,10 @@ import visualize
 from game import Game
 from numpy import argmax
 
+generation = 1
+
 def train(genomes, config):
+    global generation
     nets = [] # keep track of neural networks
     ge = [] # keep track of genomes
     population_size = len(genomes)
@@ -16,11 +19,12 @@ def train(genomes, config):
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         nets.append(net)
 
+
     game = Game(population_size)
 
     actions = [0] * population_size # initialize actions to no action for each car
     while True:
-        nearest_collision_points_distances, destroyed_cars_indices = game.step(actions)
+        nearest_collision_points_distances, destroyed_cars_indices = game.step(actions, generation)
         i = 0
         for index in destroyed_cars_indices:
             ge.pop(index-i)
@@ -35,12 +39,12 @@ def train(genomes, config):
             actions[i] = argmax(nets[i].activate(nearest_collision_points_distances[i]))
             g.fitness += 0.1
 
-    fname = "net."
     # node_names = {-1: 'Sensor1', -2: 'Sensor2', -3: 'Sensor3', -4: 'Sensor4', 0: 'Forward', 1: 'Left', 2: 'Right'}
     best_genome_this_gen = max(genomes, key=lambda x: x[1].fitness)[1]
     visualize.draw_net(config, best_genome_this_gen, view=True, prune_unused=True)
     # visualize.plot_species(stats, view=False)
 
+    generation += 1
 
 def main(config_file):
     # Load configuration.

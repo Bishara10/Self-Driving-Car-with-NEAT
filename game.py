@@ -9,7 +9,8 @@ class Game:
     def __init__(self, population_number):
         pygame.init()
         # pygame.mixer.init()
-        # pygame.font.init()
+        pygame.font.init()
+        self.font = pygame.font.SysFont('arial', 45, True)
 
         # init main display
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -68,7 +69,7 @@ class Game:
 
         return collision
 
-    def step(self, actions:list):
+    def step(self, actions:list, generation: int):
         """Advances the game by 1 frame.
             @:param - actions: a list of actions for each car.
             @:return - destroyed_cars_indices: a list indicating at which indices the destroyed cars are located
@@ -90,6 +91,9 @@ class Game:
 
         # Draw background and track
         self._drawObjects(self.objects_to_draw)
+        text = f"Generation: {generation}"
+        text_surface = self.font.render(text, True, (200, 200, 200))
+        self.screen.blit(text_surface, (600, 550))
 
         # Cast rays
         for raycaster in self.raycasters:

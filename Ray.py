@@ -1,12 +1,5 @@
 import pygame, math
-from Car import Car
 
-def normalizeAngle(angle):
-    angle = angle % (2 * math.pi)
-    if angle < 0:
-        angle = (2 * math.pi) + angle
-
-    return angle
 
 class Ray(pygame.sprite.Sprite):
     def __init__(self, angle, length, player_pos: tuple[int, int]):
@@ -17,13 +10,16 @@ class Ray(pygame.sprite.Sprite):
 
         surf = pygame.Surface((self.length, 1), pygame.SRCALPHA)
         surf.fill((255, 255, 255))
+
+        # rotate the surface towards the middle of the car
         self.surf = pygame.transform.rotate(surf, math.degrees(angle))
         self.mask = pygame.mask.from_surface(self.surf)
 
+        # calculate the middle point for the ray
         rx = (self.length * math.cos(angle))/2 + self.px
         ry = -(self.length * math.sin(angle))/2 + self.py
 
-        # and shift it so that the start point aligns with the player
+        # shift the ray so that its start point becomes the player's center point
         self.rect = self.surf.get_rect(center=(rx, ry))
 
 
